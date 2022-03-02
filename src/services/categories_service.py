@@ -25,7 +25,7 @@ class CategoriesService:
                 content = {}
 
             cur.close()
-            return (cats)
+            return jsonify(cats)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)

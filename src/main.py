@@ -1,5 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from flask_mysqldb import MySQL
+from flask_cors import CORS
 import logging
 
 from services.product_service import ProductService
@@ -20,11 +21,13 @@ app.config['MYSQL_PASSWORD'] = 'IHcHDIAjiM'
 app.config['MYSQL_DB'] = 'sql3475018'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
+CORS(app)
 
 @app.route('/product/findAll', methods=['POST'])
 def product_findAll():
     try:
         response = proService.findAll(appC=mysql)
+
         return response
     except Exception as e:
         logging.exception(e)
