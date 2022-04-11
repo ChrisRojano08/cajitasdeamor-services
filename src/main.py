@@ -23,6 +23,7 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 CORS(app)
 
+#Enpoint para productos
 @app.route('/product/findAll', methods=['POST'])
 def product_findAll():
     try:
@@ -66,6 +67,7 @@ def categories_findAll():
 
 
 
+#Enpoint para usuarios
 @app.route('/users/findAll', methods=['POST'])
 def users_findAll():
     try:
@@ -80,6 +82,17 @@ def users_insertUser():
     datos = request.get_json()
     try:
         response = userService.insertUser(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+@app.route('/users/find', methods=['POST'])
+def users_find():
+    datos = request.get_json()
+    try:
+        response = userService.findByUserPass(datos=datos, appC=mysql)
 
         return response
     except Exception as e:

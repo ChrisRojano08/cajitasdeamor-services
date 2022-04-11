@@ -18,7 +18,7 @@ class CategoriesService:
             content = {}
             for r in result:
                 content = {
-                    'idCategorias': r['idCategorias'],
+                    'idCategoria': r['idCategoria'],
                     'Descripcion': r['Descripcion']
                     }
                 cats.append(content)
@@ -38,7 +38,7 @@ class CategoriesService:
 
         try:
             cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            query = "SELECT * FROM categorias WHERE idCategorias=(%s)"
+            query = "SELECT * FROM categorias WHERE idCategoria=(%s)"
             cur.execute(query, (str(id)))
             mysql.connection.commit()
 

@@ -17,7 +17,7 @@ class UsersService:
 
             result = cur.fetchall()
 
-            productos = []
+            usuarios = []
             content = {}
             for r in result:
                 content = {
@@ -25,18 +25,52 @@ class UsersService:
                     'Nombre': r['Nombre'], 
                     'Apellidos': r['Apellidos'],
                     'Correo': r['Correo'],
-                    'Tipo': r['Tipo'],
-                    'Domicilio': homeService.findById(appC=mysql, id=r['idDomicilio'])
+                    'Tipo': r['Tipo']
                     }
-                productos.append(content)
+                usuarios.append(content)
                 content = {}
 
             cur.close()
-            return jsonify(productos)
+            return jsonify(usuarios)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)
             cur.close()
+            return jsonify(status='Error', exception=''+str(e))
+
+    def findByUserPass(self, datos, appC):
+        mysql = appC
+        request_data = datos
+
+        try:
+            correo = request_data['Correo']
+            passw = request_data['Contrasenia']
+
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = "SELECT * FROM usuarios WHERE Correo=(%s) AND Contrasenia=(%s)"
+            cur.execute(query, (correo, passw))
+            mysql.connection.commit()
+
+            result = cur.fetchall()
+
+            usuarios = []
+            content = {}
+            for r in result:
+                content = {
+                    'idUsuario': r['idUsuario'],
+                    'Nombre': r['Nombre'], 
+                    'Apellidos': r['Apellidos'],
+                    'Correo': r['Correo'],
+                    'Tipo': r['Tipo']
+                    }
+                usuarios.append(content)
+                content = {}
+
+            cur.close()
+            return jsonify(usuarios)
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
             return jsonify(status='Error', exception=''+str(e))
 
     def insertUser(self, datos, appC):
@@ -50,11 +84,9 @@ class UsersService:
             contrasenia = request_data['Contrasenia']
             tipo = request_data['Tipo']
 
-            idDomicilio = homeService.insertHome(appC=mysql, datos=datos)
-
             cur = mysql.connection.cursor()
-            query = "INSERT INTO usuarios (Nombre, Apellidos, Correo, Contrasenia, Tipo, idDomicilio) VALUES (%s,%s,%s,%s,%s,%s)"
-            cur.execute(query, (nombre,apellidos,correo,contrasenia,tipo,idDomicilio))
+            query = "INSERT INTO usuarios (Nombre, Apellidos, Correo, Contrasenia, Tipo) VALUES (%s,%s,%s,%s,%s)"
+            cur.execute(query, (nombre,apellidos,correo,contrasenia,tipo))
             mysql.connection.commit()
 
             res = [
@@ -82,7 +114,6 @@ class UsersService:
             correo = request_data['Correo']
             contrasenia = request_data['Contrasenia']
             tipo = request_data['Tipo']
-            idDomicilio = request_data['idDomicilio']
 
             upHom = homeService.updateHome(appC=mysql, datos=request_data)
 
@@ -90,8 +121,8 @@ class UsersService:
                 raise ConnectionError('Error al actualizar el domicilio')
 
             cur = mysql.connection.cursor()
-            query = "UPDATE usuarios SET Nombre=%s, Apellidos=%s, Correo=%s, Contrasenia=%s, Tipo=%s, idDomicilio=%s WHERE idUsuario=%s"
-            cur.execute(query, (nombre,apellidos,correo,contrasenia,tipo,idDomicilio,idUsuario))
+            query = "UPDATE usuarios SET Nombre=%s, Apellidos=%s, Correo=%s, Contrasenia=%s, Tipo=%s, WHERE idUsuario=%s"
+            cur.execute(query, (nombre,apellidos,correo,contrasenia,tipo,idUsuario))
             mysql.connection.commit()
 
             res = [
