@@ -82,20 +82,41 @@ class UsersService:
             apellidos = request_data['Apellidos']
             correo = request_data['Correo']
             contrasenia = request_data['Contrasenia']
-            tipo = request_data['Tipo']
+            tipo = 'usuario'
 
-            cur = mysql.connection.cursor()
+            logging.error(request_data)
+
+            if not(contrasenia.isupper() or contrasenia.islower()):
+                content={'status':'no letra'}
+                return jsonify(content)
+            if not(any(chr.isdigit() for chr in contrasenia)):
+                content={'status':'no numero'}
+                return jsonify(content)
+            if (contrasenia.find('#')==-1 and contrasenia.find('$')==-1 and contrasenia.find('%')==-1 and contrasenia.find('_')==-1 and contrasenia.find('-')==-1):
+                content={'status':'no caracter'}
+                return jsonify(content)
+
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+            queryCom = ("SELECT * FROM usuarios WHERE Correo='%s'"%correo)
+            logging.error(queryCom)
+            cur.execute(queryCom)
+            mysql.connection.commit()
+            result = cur.fetchall()
+            if len(result) != 0:
+                content={'status':'duplicado'}
+                return jsonify(content)
+
             query = "INSERT INTO usuarios (Nombre, Apellidos, Correo, Contrasenia, Tipo) VALUES (%s,%s,%s,%s,%s)"
             cur.execute(query, (nombre,apellidos,correo,contrasenia,tipo))
             mysql.connection.commit()
 
-            res = [
-                {
+            res = {
                     "status": 'Ok',
                     "Mensaje": 'Se inserto el usuario con exito!',
                     "idUsuario": ''+str(cur.lastrowid)
                 }
-            ]
+            
             cur.close()
             return jsonify(res)
         except Exception as e:
