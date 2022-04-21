@@ -39,6 +39,41 @@ class ProductService:
             logging.error(e)
             cur.close()
             return jsonify(status='Error', exception=''+str(e))
+        
+    def findById(self, id, appC):
+        mysql = appC
+        idProd=id
+
+        try:
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = ("SELECT * FROM productos WHERE idProducto='%s'"%idProd)
+            cur.execute(query)
+            mysql.connection.commit()
+
+            result = cur.fetchall()
+
+            productos = []
+            content = {}
+            for r in result:
+                content = {
+                    'idProducto': r['idProducto'],
+                    'Nombre': r['Nombre'], 
+                    'Descripcion': r['Descripcion'],
+                    'Categoria': catService.findById(appC=mysql, id=r['idCategoria']),
+                    'Precio': r['Precio'],
+                    'Tamanio': r['Tamanio'],
+                    'Imagen': r['Imagen'],
+                    }
+                productos.append(content)
+                content = {}
+
+            cur.close()
+            return (productos)
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
+            cur.close()
+            return jsonify(status='Error', exception=''+str(e))
 
     def insertProduct(self, datos, appC):
         request_data = datos

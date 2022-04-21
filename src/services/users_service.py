@@ -1,6 +1,7 @@
 import logging
 from flask import jsonify
 from flask_mysqldb import MySQLdb
+from requests import request
 
 from .home_service import HomeService
 homeService = HomeService()
@@ -68,6 +69,39 @@ class UsersService:
 
             cur.close()
             return jsonify(usuarios)
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
+            return jsonify(status='Error', exception=''+str(e))
+
+    def findById(self, id, appC):
+        mysql = appC
+        idUss = id
+
+        try:
+
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = ("SELECT * FROM usuarios WHERE idUsuario='%s'"%idUss)
+            cur.execute(query)
+            mysql.connection.commit()
+
+            result = cur.fetchall()
+
+            usuarios = []
+            content = {}
+            for r in result:
+                content = {
+                    'idUsuario': r['idUsuario'],
+                    'Nombre': r['Nombre'], 
+                    'Apellidos': r['Apellidos'],
+                    'Correo': r['Correo'],
+                    'Tipo': r['Tipo']
+                    }
+                usuarios.append(content)
+                content = {}
+
+            cur.close()
+            return (usuarios)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)
@@ -155,6 +189,32 @@ class UsersService:
             ]
             cur.close()
             return jsonify(res)
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
+            return jsonify(status='Error', exception=''+str(e))
+
+    def delete(self, datos, appC):
+        mysql = appC
+        request_data=datos
+        idUss = request_data['idUsuario']
+
+        try:
+
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = ("DELETE FROM usuarios WHERE idUsuario=%s"%str(idUss))
+            cur.execute(query)
+            mysql.connection.commit()
+
+            result = cur.fetchall()
+
+            res = {
+                    "status": 'Ok',
+                    "Mensaje": 'Se elimino al usuario con exito!',
+                }
+
+            cur.close()
+            return (res)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)
