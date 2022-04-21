@@ -12,6 +12,9 @@ catService = CategoriesService()
 from services.users_service import UsersService
 userService = UsersService()
 
+from services.shopping_service import ShoppingService
+shopService = ShoppingService()
+
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = 'localhost'
@@ -110,6 +113,49 @@ def users_updateUser():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+@app.route('/users/delete', methods=['POST'])
+def users_delete():
+    datos = request.get_json()
+    try:
+        response = userService.delete(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+#Enpoint para compras
+@app.route('/shopping/findAll', methods=['POST'])
+def shopping_findAll():
+    try:
+        response = shopService.findAll(appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+@app.route('/shopping/update', methods=['POST'])
+def shopping_update():
+    datos = request.get_json()
+    try:
+        response = shopService.update(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+@app.route('/shopping/cancel', methods=['POST'])
+def shopping_cancel():
+    datos = request.get_json()
+    try:
+        response = shopService.cancel(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
         
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
