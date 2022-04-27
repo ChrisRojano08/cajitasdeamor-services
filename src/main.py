@@ -15,6 +15,9 @@ userService = UsersService()
 from services.shopping_service import ShoppingService
 shopService = ShoppingService()
 
+from services.cartServices import CartService
+cartService = CartService()
+
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = 'localhost'
@@ -59,6 +62,17 @@ def product_updateProduct():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+@app.route('/product/delete', methods=['POST'])
+def product_delete():
+    datos = request.get_json()
+    try:
+        response = proService.delete(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
 @app.route('/categories/findAll', methods=['POST'])
 def categories_findAll():
     try:
@@ -69,6 +83,36 @@ def categories_findAll():
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
 
+#Endpoint para carrito de compras
+@app.route('/cart/findByUserId', methods=['POST'])
+def cart_findByUserId():
+    datos = request.get_json()
+    try:
+        response = cartService.findByUserId(appC=mysql, datos=datos)
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+@app.route('/cart/insert', methods=['POST'])
+def cart_insert():
+    datos = request.get_json()
+    try:
+        response = cartService.insert(appC=mysql, datos=datos)
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+@app.route('/cart/delete', methods=['POST'])
+def cart_delete():
+    datos = request.get_json()
+    try:
+        response = cartService.delete(appC=mysql, datos=datos)
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
 #Enpoint para usuarios
 @app.route('/users/findAll', methods=['POST'])

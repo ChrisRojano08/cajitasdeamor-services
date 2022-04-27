@@ -1,7 +1,6 @@
 import logging
 from flask import jsonify
 from flask_mysqldb import MySQLdb
-import datetime
 
 from .users_service import UsersService
 userService = UsersService()
