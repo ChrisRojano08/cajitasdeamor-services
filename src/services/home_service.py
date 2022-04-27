@@ -8,7 +8,7 @@ class HomeService:
         id = id
 
         try:
-            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             query = "SELECT * FROM domicilio WHERE idDomicilio=(%s)"
             cur.execute(query, (str(id)))
             mysql.connection.commit()
@@ -28,17 +28,20 @@ class HomeService:
         mysql = appC
 
         try:
+            numero = request_data['Numero']
             calle = request_data['Calle']
+            colonia = request_data['Colonia']
             municipio = request_data['Municipio']
             estado = request_data['Estado']
             codigoPostal = request_data['CodigoPostal']
+            idUsuario = request_data['idUsuario']
 
             cur = mysql.connection.cursor()
-            query = "INSERT INTO domicilio (Calle, Municipio, Estado, CodigoPostal) VALUES (%s,%s,%s,%s)"
-            cur.execute(query, (calle,municipio,estado,codigoPostal))
+            query = "INSERT INTO domicilio (Numero, Calle, Colonia, Municipio, Estado, CodigoPostal, idUsuario) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+            cur.execute(query, (numero,calle,colonia,municipio,estado,codigoPostal,idUsuario))
             mysql.connection.commit()
 
-            return (cur.lastrowid)
+            return jsonify(cur.lastrowid)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)
@@ -51,14 +54,17 @@ class HomeService:
 
         try:
             idDomicilio = request_data['idDomicilio']
+            numero = request_data['Numero']
             calle = request_data['Calle']
+            colonia = request_data['Colonia']
             municipio = request_data['Municipio']
             estado = request_data['Estado']
             codigoPostal = request_data['CodigoPostal']
+            
 
             cur = mysql.connection.cursor()
-            query = "UPDATE domicilio SET Calle=%s, Municipio=%s, Estado=%s, CodigoPostal=%s WHERE idDomicilio=%s"
-            cur.execute(query, (calle,municipio,estado,codigoPostal,idDomicilio))
+            query = "UPDATE domicilio SET Numero=%s, Calle=%s, Colonia=%s, Municipio=%s, Estado=%s, CodigoPostal=%s WHERE idDomicilio=%s"
+            cur.execute(query, (numero,calle,colonia,municipio,estado,codigoPostal,idDomicilio))
             mysql.connection.commit()
 
             res = {
@@ -72,7 +78,7 @@ class HomeService:
             logging.exception('res')
             logging.exception(res)
 
-            return (res)
+            return jsonify(res)
         except Exception as e:
             logging.error('Error dom: ')
             logging.error(e)

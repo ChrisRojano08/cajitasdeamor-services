@@ -18,6 +18,9 @@ shopService = ShoppingService()
 from services.cartServices import CartService
 cartService = CartService()
 
+from services.home_service import HomeService
+home_service = HomeService()
+
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = 'localhost'
@@ -201,5 +204,19 @@ def shopping_cancel():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
         
+
+#Enpoint para Home
+@app.route('/home/insert', methods=['POST'])
+def home_insertHome():
+    datos = request.get_json()
+    try:
+        response = home_service.insertHome(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+        
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
