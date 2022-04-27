@@ -75,6 +75,37 @@ class ProductService:
             cur.close()
             return jsonify(status='Error', exception=''+str(e))
 
+    def delete(self, datos, appC):
+        mysql = appC
+        request_data=datos
+        idProd = request_data['idProducto']
+
+        try:
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = ("DELETE FROM productos WHERE idProducto='%s'"%idProd)
+            cur.execute(query)
+            mysql.connection.commit()
+
+            result = cur.fetchall()
+
+            res = {
+                    "status": 'Ok',
+                    "Mensaje": 'Se elimino el producto con exito!',
+                }
+
+            cur.close()
+            return (res)
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
+
+            res = {
+                    "status": 'Error',
+                    "exception": ''+str(e),
+                }
+
+            return jsonify(res)
+
     def insertProduct(self, datos, appC):
         request_data = datos
         mysql = appC
