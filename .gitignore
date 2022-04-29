@@ -1,6 +1,2 @@
-# Byte-compiled
-__pycache__
- __pycache__/
- *.pyc
-
-
+*.pyc
+src/services/__pycache__/
