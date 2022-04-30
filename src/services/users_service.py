@@ -219,3 +219,69 @@ class UsersService:
             logging.error('Error: ')
             logging.error(e)
             return jsonify(status='Error', exception=''+str(e))
+
+    def changePass(self, datos, appC):
+        request_data = datos
+        mysql = appC
+
+        try:
+            correo = request_data['Correo']
+            contrasenia = request_data['Contrasenia']
+
+            if not(contrasenia.isupper() or contrasenia.islower()):
+                content={'status':'no letra'}
+                return jsonify(content)
+            if not(any(chr.isdigit() for chr in contrasenia)):
+                content={'status':'no numero'}
+                return jsonify(content)
+            if (contrasenia.find('#')==-1 and contrasenia.find('$')==-1 and contrasenia.find('%')==-1 and contrasenia.find('_')==-1 and contrasenia.find('-')==-1):
+                content={'status':'no caracter'}
+                return jsonify(content)
+
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = ("UPDATE usuarios SET Contrasenia=%s WHERE Correo=%s")
+            cur.execute(query, (contrasenia,correo))
+
+            mysql.connection.commit()
+
+            res ={
+                    "status": 'Ok',
+                    "Mensaje": 'Se actualizo la contraseña con exito!'
+                }
+            
+            cur.close()
+            return jsonify(res)
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
+            return jsonify(status='Error', exception=''+str(e))
+
+    def findUserByEmail(self, datos, appC):
+        mysql = appC
+        try:
+            emailUser = datos
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = ("SELECT * FROM usuarios WHERE Correo='%s'"%emailUser)
+            cur.execute(query)
+            
+            mysql.connection.commit()
+            result = cur.fetchall()
+
+            if len(result) != 0:
+                res = {
+                    "status": 'Ok',
+                    "Mensaje": 'Se encontro el usuario'
+                }
+            else:
+                res = {
+                    "status": 'Error',
+                    "Mensaje": 'No se encotro un usuario con este correo'
+                } 
+
+            cur.close()
+            return jsonify(res)
+            
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
+            return jsonify(status='Error', exception=''+str(e))
