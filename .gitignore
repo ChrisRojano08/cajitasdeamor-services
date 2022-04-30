@@ -1,2 +1,2 @@
-*.pyc
+*.cpython.pyc
 src/services/__pycache__/
