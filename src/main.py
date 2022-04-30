@@ -205,6 +205,26 @@ def shopping_cancel():
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
         
 
+@app.route('/users/findEmail', methods=['POST'])
+def users_findEmail():
+    datos = request.get_json()
+    try:
+        response = userService.findUserByEmail(datos=datos, appC=mysql)
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+@app.route('/users/changePass', methods=['POST'])
+def users_changePass():
+    datos = request.get_json()
+    try:
+        response = userService.changePass(datos=datos, appC=mysql)
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
 #Enpoint para Home
 @app.route('/home/insert', methods=['POST'])
 def home_insertHome():
