@@ -21,6 +21,12 @@ cartService = CartService()
 from services.home_service import HomeService
 home_service = HomeService()
 
+from services.pago_service import PagoService
+pago_service = PagoService()
+
+from services.userMenu_services import UserMenuService
+userMenu_services = UserMenuService()
+
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = 'localhost'
@@ -236,7 +242,30 @@ def home_insertHome():
     except Exception as e:
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
-        
+
+#Enpoint para Metodo De Pago
+@app.route('/pago/insert', methods=['POST'])
+def pago_insertPago():
+    datos = request.get_json()
+    try:
+        response = pago_service.insertPago(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+#Enpoint para MenuUsuario
+@app.route('/menuUsuario/findByUserId', methods=['POST'])
+def menuUsuario_findByUserId():
+    datos = request.get_json()
+    try:
+        response = userMenu_services.findByUserId(appC=mysql, datos=datos)
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+       
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
