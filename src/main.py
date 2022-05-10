@@ -21,11 +21,8 @@ cartService = CartService()
 from services.home_service import HomeService
 home_service = HomeService()
 
-from services.pago_service import PagoService
-pago_service = PagoService()
-
-from services.userMenu_services import UserMenuService
-userMenu_services = UserMenuService()
+from services.payment_service import PaymentService
+payment_service = PaymentService()
 
 app = Flask(__name__)
 
@@ -177,6 +174,26 @@ def users_delete():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+@app.route('/users/findEmail', methods=['POST'])
+def users_findEmail():
+    datos = request.get_json()
+    try:
+        response = userService.findUserByEmail(datos=datos, appC=mysql)
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+@app.route('/users/changePass', methods=['POST'])
+def users_changePass():
+    datos = request.get_json()
+    try:
+        response = userService.changePass(datos=datos, appC=mysql)
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
 #Enpoint para compras
 @app.route('/shopping/findAll', methods=['POST'])
 def shopping_findAll():
@@ -210,22 +227,11 @@ def shopping_cancel():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
         
-
-@app.route('/users/findEmail', methods=['POST'])
-def users_findEmail():
+@app.route('/shopping/findByUserId', methods=['POST'])
+def menuUsuario_findByUserId():
     datos = request.get_json()
     try:
-        response = userService.findUserByEmail(datos=datos, appC=mysql)
-        return response
-    except Exception as e:
-        logging.exception(e)
-        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
-
-@app.route('/users/changePass', methods=['POST'])
-def users_changePass():
-    datos = request.get_json()
-    try:
-        response = userService.changePass(datos=datos, appC=mysql)
+        response = shopService.findByUserId(appC=mysql, datos=datos)
         return response
     except Exception as e:
         logging.exception(e)
@@ -243,29 +249,37 @@ def home_insertHome():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+@app.route('/home/findByUserId', methods=['POST'])
+def home_findByUserId():
+    datos = request.get_json()
+    try:
+        response = home_service.findByUserId(appC=mysql, datos=datos)
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
 #Enpoint para Metodo De Pago
-@app.route('/pago/insert', methods=['POST'])
+@app.route('/payment/insert', methods=['POST'])
 def pago_insertPago():
     datos = request.get_json()
     try:
-        response = pago_service.insertPago(datos=datos, appC=mysql)
+        response = payment_service.insert(datos=datos, appC=mysql)
 
         return response
     except Exception as e:
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
-#Enpoint para MenuUsuario
-@app.route('/menuUsuario/findByUserId', methods=['POST'])
-def menuUsuario_findByUserId():
+@app.route('/payment/findByUserId', methods=['POST'])
+def payment_findByUserId():
     datos = request.get_json()
     try:
-        response = userMenu_services.findByUserId(appC=mysql, datos=datos)
+        response = payment_service.findByUserId(appC=mysql, datos=datos)
         return response
     except Exception as e:
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
-       
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

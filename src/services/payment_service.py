@@ -2,28 +2,41 @@ import logging
 from flask import jsonify
 from flask_mysqldb import MySQLdb
 
-class PagoService:
-    def findById(self, appC, id):
+class PaymentService:
+    def findById(self, id, appC):
         mysql = appC
-        id = id
+        idPago = id
 
         try:
-            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            query = "SELECT * FROM metodopago WHERE idMetodoPago=(%s)"
-            cur.execute(query, (str(id)))
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = ("SELECT * FROM metodopago WHERE idMetodoPago='%s'"%idPago)
+            cur.execute(query)
             mysql.connection.commit()
 
-            result = cur.fetchone()
+            result = cur.fetchall()
+
+            metodoP = []
+            content = {}
+            for r in result:
+                content = {
+                    'idMetodoPago': r['idMetodoPago'],
+                    'Nombre': r['Nombre'], 
+                    'Banco': r['Banco'],
+                    'Cuenta': r['Cuenta'],
+                    'CVV': r['CVV'],
+                    'FechaVencimiento': r['FechaVencimiento'].strftime('%d-%m-%Y')
+                    }
+                metodoP.append(content)
+                content = {}
 
             cur.close()
-            return (result)
+            return (metodoP)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)
-            cur.close()
             return jsonify(status='Error', exception=''+str(e))
 
-    def insertPago(self, datos, appC):
+    def insert(self, datos, appC):
         request_data = datos
         mysql = appC
 
@@ -46,7 +59,7 @@ class PagoService:
             logging.error(e)
             return jsonify(status='Error', exception=''+str(e))
 
-    def updatePago(self, datos, appC):
+    def update(self, datos, appC):
         request_data = datos
         mysql = appC
 
@@ -81,4 +94,37 @@ class PagoService:
             logging.error(e)
             
             return jsonify(status='Error dom', exception=''+str(e))
+
+    def findByUserId(self, id, appC):
+        mysql = appC
+        idU = id
+
+        try:
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = ("SELECT * FROM metodopago WHERE idUsuario='%s'"%idU)
+            cur.execute(query)
+            mysql.connection.commit()
+
+            result = cur.fetchall()
+
+            metodoP = []
+            content = {}
+            for r in result:
+                content = {
+                    'idMetodoPago': r['idMetodoPago'],
+                    'Nombre': r['Nombre'], 
+                    'Banco': r['Banco'],
+                    'Cuenta': r['Cuenta'],
+                    'CVV': r['CVV'],
+                    'FechaVencimiento': r['FechaVencimiento'].strftime('%d-%m-%Y')
+                    }
+                metodoP.append(content)
+                content = {}
+
+            cur.close()
+            return (metodoP)
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
+            return jsonify(status='Error', exception=''+str(e))
 
