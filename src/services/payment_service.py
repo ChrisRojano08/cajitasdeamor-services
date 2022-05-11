@@ -53,7 +53,13 @@ class PaymentService:
             cur.execute(query, (nombre,banco,cuenta,idUsuario,cvv,fechavencimiento))
             mysql.connection.commit()
 
-            return jsonify(cur.lastrowid)
+            res = {
+                    "status": 'Ok',
+                    "Mensaje": 'Se inserto el método con exito!',
+                    "idMetodoPago": cur.lastrowid
+                }
+
+            return jsonify(res)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)
@@ -95,9 +101,11 @@ class PaymentService:
             
             return jsonify(status='Error dom', exception=''+str(e))
 
-    def findByUserId(self, id, appC):
+    def findByUserId(self, datos, appC):
         mysql = appC
-        idU = id
+
+        request_data = datos
+        idU = request_data['idUsuario']
 
         try:
             cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -122,7 +130,7 @@ class PaymentService:
                 content = {}
 
             cur.close()
-            return (metodoP)
+            return jsonify(metodoP)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)

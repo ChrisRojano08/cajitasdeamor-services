@@ -120,6 +120,7 @@ def cart_delete():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+
 #Enpoint para usuarios
 @app.route('/users/findAll', methods=['POST'])
 def users_findAll():
@@ -163,6 +164,7 @@ def users_updateUser():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+
 @app.route('/users/delete', methods=['POST'])
 def users_delete():
     datos = request.get_json()
@@ -194,6 +196,7 @@ def users_changePass():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+
 #Enpoint para compras
 @app.route('/shopping/findAll', methods=['POST'])
 def shopping_findAll():
@@ -210,6 +213,17 @@ def shopping_update():
     datos = request.get_json()
     try:
         response = shopService.update(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+@app.route('/shopping/updateDed', methods=['POST'])
+def shopping_updateDed():
+    datos = request.get_json()
+    try:
+        response = shopService.updateDed(datos=datos, appC=mysql)
 
         return response
     except Exception as e:
@@ -237,6 +251,7 @@ def menuUsuario_findByUserId():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+
 #Enpoint para Home
 @app.route('/home/insert', methods=['POST'])
 def home_insertHome():
@@ -258,6 +273,7 @@ def home_findByUserId():
     except Exception as e:
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
 
 #Enpoint para Metodo De Pago
 @app.route('/payment/insert', methods=['POST'])

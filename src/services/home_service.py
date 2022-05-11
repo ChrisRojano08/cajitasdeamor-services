@@ -3,9 +3,10 @@ from flask import jsonify
 from flask_mysqldb import MySQLdb
 
 class HomeService:
-    def findByUserId(self, appC, id):
+    def findByUserId(self, appC, datos):
         mysql = appC
-        id = id
+        request_data = datos
+        id = request_data['idUsuario']
 
         try:
             cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -31,7 +32,7 @@ class HomeService:
                 content = {}
 
             cur.close()
-            return (domicilio)
+            return jsonify(domicilio)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)
@@ -56,7 +57,13 @@ class HomeService:
             cur.execute(query, (numero,calle,colonia,municipio,estado,codigoPostal,idUsuario))
             mysql.connection.commit()
 
-            return jsonify(cur.lastrowid)
+            res = {
+                    "status": 'Ok',
+                    "Mensaje": 'Se inserto el domicilio con exito!',
+                    "idDomicilio": cur.lastrowid
+                }
+
+            return jsonify(res)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)
