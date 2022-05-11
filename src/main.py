@@ -230,6 +230,17 @@ def shopping_updateDed():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+@app.route('/shopping/insert', methods=['POST'])
+def shopping_insert():
+    datos = request.get_json()
+    try:
+        response = shopService.insert(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
 @app.route('/shopping/cancel', methods=['POST'])
 def shopping_cancel():
     datos = request.get_json()
