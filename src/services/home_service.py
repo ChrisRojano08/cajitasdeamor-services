@@ -3,20 +3,36 @@ from flask import jsonify
 from flask_mysqldb import MySQLdb
 
 class HomeService:
-    def findById(self, appC, id):
+    def findByUserId(self, appC, datos):
         mysql = appC
-        id = id
+        request_data = datos
+        id = request_data['idUsuario']
 
         try:
             cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            query = "SELECT * FROM domicilio WHERE idDomicilio=(%s)"
+            query = "SELECT * FROM domicilio WHERE idUsuario=(%s)"
             cur.execute(query, (str(id)))
             mysql.connection.commit()
 
-            result = cur.fetchone()
+            result = cur.fetchall()
+
+            domicilio = []
+            content = {}
+            for r in result:
+                content = {
+                    'idDomicilio': r['idDomicilio'],
+                    'Numero': r['Numero'], 
+                    'Calle': r['Calle'],
+                    'Colonia': r['Colonia'],
+                    'Municipio': r['Municipio'],
+                    'Estado': r['Estado'],
+                    'CodigoPostal': r['CodigoPostal']
+                    }
+                domicilio.append(content)
+                content = {}
 
             cur.close()
-            return (result)
+            return jsonify(domicilio)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)
@@ -41,7 +57,13 @@ class HomeService:
             cur.execute(query, (numero,calle,colonia,municipio,estado,codigoPostal,idUsuario))
             mysql.connection.commit()
 
-            return jsonify(cur.lastrowid)
+            res = {
+                    "status": 'Ok',
+                    "Mensaje": 'Se inserto el domicilio con exito!',
+                    "idDomicilio": cur.lastrowid
+                }
+
+            return jsonify(res)
         except Exception as e:
             logging.error('Error: ')
             logging.error(e)
@@ -84,4 +106,38 @@ class HomeService:
             logging.error(e)
             
             return jsonify(status='Error dom', exception=''+str(e))
+
+    def findById(self, id, appC):
+        mysql = appC
+        idDom = id
+
+        try:
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = ("SELECT * FROM domicilio WHERE idDomicilio='%s'"%idDom)
+            cur.execute(query)
+            mysql.connection.commit()
+
+            result = cur.fetchall()
+
+            domicilio = []
+            content = {}
+            for r in result:
+                content = {
+                    'idDomicilio': r['idDomicilio'],
+                    'Numero': r['Numero'], 
+                    'Calle': r['Calle'],
+                    'Colonia': r['Colonia'],
+                    'Municipio': r['Municipio'],
+                    'Estado': r['Estado'],
+                    'CodigoPostal': r['CodigoPostal']
+                    }
+                domicilio.append(content)
+                content = {}
+
+            cur.close()
+            return (domicilio)
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
+            return jsonify(status='Error', exception=''+str(e))
 
