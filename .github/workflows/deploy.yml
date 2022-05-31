@@ -15,12 +15,9 @@ jobs:
         key_path: "devops/cajitasdeamor.pem"
         script: |
           cd /home/projects/cajitasdeamor-services
-          ls
           sudo git checkout main
           sudo git pull origin main
           sudo systemctl stop cajitas-services
           sudo systemctl start cajitas-services
           sudo systemctl enable cajitas-services
     
-
-
