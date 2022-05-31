@@ -21,4 +21,5 @@ jobs:
           sudo systemctl stop cajitas-services
           sudo systemctl start cajitas-services
           sudo systemctl enable cajitas-services
+          sudo systemctl restart nginx
     
