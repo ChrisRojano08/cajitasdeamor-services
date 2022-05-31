@@ -16,8 +16,10 @@ jobs:
         script: |
           cd /home/projects/cajitasdeamor-services
           sudo git checkout main
+          sudo git remote set-url origin https://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@github.com/ChrisRojano08/cajitasdeamor-services.git
           sudo git pull origin main
           sudo systemctl stop cajitas-services
           sudo systemctl start cajitas-services
           sudo systemctl enable cajitas-services
+          sudo systemctl restart nginx
     
