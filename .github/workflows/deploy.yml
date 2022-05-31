@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
-    - name: Deploy artifact
+    - name: Deploy backend
       uses: appleboy/ssh-action@v0.1.4
       with:
         host: ${{ secrets.HOST }}
@@ -16,7 +16,6 @@ jobs:
         script: |
           cd /home/projects/cajitasdeamor-services
           ls
-          sudo git config --global --add safe.directory /home/projects/cajitasdeamor-services
           sudo git checkout main
           sudo git pull origin main
           sudo systemctl stop cajitas-services
