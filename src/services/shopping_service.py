@@ -41,7 +41,7 @@ class ShoppingService:
 
                 content = {
                     'idCompra': r['idCompra'],
-                    'idUsuario': r['idUsuario'], 
+                    'idUsuario': userService.findById(appC=mysql, id=r['idUsuario']),
                     'Fecha': r['Fecha'].strftime('%d-%m-%Y'),
                     'Dedicatoria': r['Dedicatoria'],
                     'Nombre': r['Nombre'],
