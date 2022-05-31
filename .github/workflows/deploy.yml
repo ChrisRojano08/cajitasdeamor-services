@@ -16,8 +16,12 @@ jobs:
         script: |
           cd /home/projects/cajitasdeamor-services
           sudo git checkout main
+          echo 'webos'
           sudo git pull
+          echo 'webos 2'
           sudo systemctl stop cajitas-services
+          echo 'webos3'
           sudo systemctl start cajitas-services
           sudo systemctl enable cajitas-services
+          echo 'webos5'
     
