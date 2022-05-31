@@ -14,7 +14,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key_path: "devops/cajitasdeamor.pem"
         script: |
-          cd /home/projects/cajitasdeamor-services
+          cd /home/cajitasdeamor-services
           sudo git checkout main
           sudo git remote set-url origin https://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@github.com/ChrisRojano08/cajitasdeamor-services.git
           sudo git pull origin main
