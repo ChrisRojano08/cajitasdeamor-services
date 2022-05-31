@@ -15,7 +15,9 @@ jobs:
         key_path: "devops/cajitasdeamor.pem"
         script: |
           cd /home/projects/cajitasdeamor-services
+          ls
           git checkout main
+          git config --global --add safe.directory /home/projects/cajitasdeamor-services
           git pull origin main
           sudo systemctl stop cajitas-services
           sudo systemctl start cajitas-services
