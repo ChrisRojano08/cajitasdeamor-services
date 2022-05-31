@@ -1,0 +1,26 @@
+name: Deploy
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    needs: [ build ]
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Deploy artifact
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key_path: "devops/cajitasdeamor.pem"
+        script: |
+          cd /home/projects/cajitasdeamor-services
+          git checkout main
+          git pull origin main
+          sudo systemctl stop cajitas-services
+          sudo systemctl start cajitas-services
+          sudo systemctl enable cajitas-services
+    
+
+
