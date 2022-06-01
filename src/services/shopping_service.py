@@ -207,7 +207,7 @@ class ShoppingService:
             result = cur.fetchall()
             
             if len(result) == 0:
-                content={'status':'Vacio'}
+                content=[{'status':'Vacio'}]
                 return jsonify(content)
 
             productos = []

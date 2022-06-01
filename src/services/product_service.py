@@ -22,11 +22,11 @@ class ProductService:
             for r in result:
                 content = {
                     'idProducto': r['idProducto'],
-                    'Nombre': r['Imagen'], 
-                    'Descripcion': r['Imagen'],
+                    'Nombre': r['Nombre'], 
+                    'Descripcion': r['Descripcion'],
                     'Categoria': catService.findById(appC=mysql, id=r['idCategoria']),
-                    'Precio': r['Imagen'],
-                    'Tamanio': r['Imagen'],
+                    'Precio': r['Precio'],
+                    'Tamanio': r['Tamanio'],
                     'Imagen': r['Imagen'],
                     }
                 productos.append(content)

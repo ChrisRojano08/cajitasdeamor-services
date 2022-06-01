@@ -16,6 +16,10 @@ class HomeService:
 
             result = cur.fetchall()
 
+            if len(result) == 0:
+                content=[{'status':'Vacio'}]
+                return jsonify(content)
+
             domicilio = []
             content = {}
             for r in result:
