@@ -84,7 +84,7 @@ class ShoppingService:
                 return jsonify(content)
 
             cur = mysql.connection.cursor()
-            query = "INSERT INTO compra (idUsuario, Fecha, Dedicatoria, Nombre, idsProductos, Estado, idMetodoPado, idDomicilio, Monto) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            query = "INSERT INTO compra (idUsuario, Fecha, Dedicatoria, Nombre, idsProductos, Estado, idMetodoPago, idDomicilio, Monto) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cur.execute(query, (idUs,fecha,dedicatoria,nombre,ids,estado,idMetodo,idDomicilio,total))
             mysql.connection.commit()
 
