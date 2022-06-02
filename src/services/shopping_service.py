@@ -79,6 +79,10 @@ class ShoppingService:
             idDomicilio = request_data['idDomicilio']
             total = request_data['Monto']
 
+            if (any(chr.isdigit() for chr in nombre)):
+                content={'status':'No ingrese números en Nombre'}
+                return jsonify(content)
+
             cur = mysql.connection.cursor()
             query = "INSERT INTO compra (idUsuario, Fecha, Dedicatoria, Nombre, idsProductos, Estado, idMetodoPado, idDomicilio, Monto) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cur.execute(query, (idUs,fecha,dedicatoria,nombre,ids,estado,idMetodo,idDomicilio,total))
@@ -150,6 +154,10 @@ class ShoppingService:
             dedicatoria = request_data['Dedicatoria']
             nombre = request_data['Nombre']
             id = request_data['idCompra']
+
+            if (any(chr.isdigit() for chr in nombre)):
+                content={'status':'No ingrese números en Nombre'}
+                return jsonify(content)
 
             cur = mysql.connection.cursor()
             query = "UPDATE compra SET Dedicatoria=%s, Nombre=%s WHERE idCompra=%s"

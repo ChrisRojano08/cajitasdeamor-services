@@ -56,6 +56,13 @@ class HomeService:
             codigoPostal = request_data['CodigoPostal']
             idUsuario = request_data['idUsuario']
 
+            if (any(chr.isdigit() for chr in municipio)):
+                content={'status':'No ingrese números en Municipio'}
+                return jsonify(content)
+            if (any(chr.isdigit() for chr in estado)):
+                content={'status':'No ingrese números en Estado'}
+                return jsonify(content)    
+
             cur = mysql.connection.cursor()
             query = "INSERT INTO domicilio (Numero, Calle, Colonia, Municipio, Estado, CodigoPostal, idUsuario) VALUES (%s,%s,%s,%s,%s,%s,%s)"
             cur.execute(query, (numero,calle,colonia,municipio,estado,codigoPostal,idUsuario))
@@ -86,6 +93,13 @@ class HomeService:
             municipio = request_data['Municipio']
             estado = request_data['Estado']
             codigoPostal = request_data['CodigoPostal']
+
+            if (any(chr.isdigit() for chr in municipio)):
+                content={'status':'No ingrese números en Municipio'}
+                return jsonify(content)
+            if (any(chr.isdigit() for chr in estado)):
+                content={'status':'No ingrese números en Estado'}
+                return jsonify(content) 
             
 
             cur = mysql.connection.cursor()
