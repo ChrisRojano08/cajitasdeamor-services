@@ -118,10 +118,6 @@ class ProductService:
             tamanio = request_data['Tamanio']
             imagen = request_data['Imagen']
 
-            if (any(chr.isdigit() for chr in nombre)):
-                content={'status':'No ingrese números en el Nombre del producto'}
-                return jsonify(content)
-
             cur = mysql.connection.cursor()
             query = "INSERT INTO productos (Nombre, Descripcion, idCategoria, Precio, Tamanio, Imagen) VALUES (%s,%s,%s,%s,%s,%s)"
             cur.execute(query, (nombre,descripcion,idCategoria,precio,tamanio,imagen))
@@ -153,10 +149,6 @@ class ProductService:
             precio = request_data['Precio']
             tamanio = request_data['Tamanio']
             imagen = request_data['Imagen']
-
-            if (any(chr.isdigit() for chr in nombre)):
-                content={'status':'No ingrese números en el Nombre del producto'}
-                return jsonify(content)
 
             cur = mysql.connection.cursor()
             query = "UPDATE productos SET Nombre=%s, Descripcion=%s, idCategoria=%s, Precio=%s, Tamanio=%s, Imagen=%s WHERE idProducto=%s"
