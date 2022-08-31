@@ -79,8 +79,11 @@ class ShoppingService:
             idDomicilio = request_data['idDomicilio']
             total = request_data['Monto']
 
+            if(str(ids)[-1] == ','):
+                ids = str(ids)[:-1]
+
             cur = mysql.connection.cursor()
-            query = "INSERT INTO compra (idUsuario, Fecha, Dedicatoria, Nombre, idsProductos, Estado, idMetodoPado, idDomicilio, Monto) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            query = "INSERT INTO compra (idUsuario, Fecha, Dedicatoria, Nombre, idsProductos, Estado, idMetodoPago, idDomicilio, Monto) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             cur.execute(query, (idUs,fecha,dedicatoria,nombre,ids,estado,idMetodo,idDomicilio,total))
             mysql.connection.commit()
 
