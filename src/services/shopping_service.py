@@ -66,8 +66,6 @@ class ShoppingService:
         request_data = datos
         mysql = appC
 
-        logging.error(request_data)
-
         try:
             idUs = request_data['idUsuario']
             fecha = datetime.today().strftime('%Y-%m-%d')
@@ -81,6 +79,10 @@ class ShoppingService:
 
             if(str(ids)[-1] == ','):
                 ids = str(ids)[:-1]
+                
+            if (any(chr.isdigit() for chr in nombre)):
+                content={'status':'No ingrese números en Nombre'}
+                return jsonify(content)
 
             cur = mysql.connection.cursor()
             query = "INSERT INTO compra (idUsuario, Fecha, Dedicatoria, Nombre, idsProductos, Estado, idMetodoPago, idDomicilio, Monto) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
@@ -101,8 +103,6 @@ class ShoppingService:
     def update(self, datos, appC):
         request_data = datos
         mysql = appC
-
-        logging.error(request_data)
 
         try:
             numEstado = request_data['Estado']
@@ -147,12 +147,14 @@ class ShoppingService:
         request_data = datos
         mysql = appC
 
-        logging.error(request_data)
-
         try:
             dedicatoria = request_data['Dedicatoria']
             nombre = request_data['Nombre']
             id = request_data['idCompra']
+
+            if (any(chr.isdigit() for chr in nombre)):
+                content={'status':'No ingrese números en Nombre'}
+                return jsonify(content)
 
             cur = mysql.connection.cursor()
             query = "UPDATE compra SET Dedicatoria=%s, Nombre=%s WHERE idCompra=%s"

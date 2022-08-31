@@ -120,6 +120,12 @@ class UsersService:
 
             logging.error(request_data)
 
+            if (any(chr.isdigit() for chr in nombre)):
+                content={'status':'No ingrese números en su Nombre'}
+                return jsonify(content)
+            if (any(chr.isdigit() for chr in apellidos)):
+                content={'status':'No ingrese números en sus Apellidos'}
+                return jsonify(content)
             if not(contrasenia.isupper() or contrasenia.islower()):
                 content={'status':'no letra'}
                 return jsonify(content)
@@ -169,6 +175,13 @@ class UsersService:
             correo = request_data['Correo']
             contrasenia = request_data['Contrasenia']
             tipo = request_data['Tipo']
+
+            if (any(chr.isdigit() for chr in nombre)):
+                content={'status':'No ingrese números en su Nombre'}
+                return jsonify(content)
+            if (any(chr.isdigit() for chr in apellidos)):
+                content={'status':'No ingrese números en sus Apellidos'}
+                return jsonify(content)
 
             upHom = homeService.updateHome(appC=mysql, datos=request_data)
 
