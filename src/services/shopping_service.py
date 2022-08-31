@@ -66,8 +66,6 @@ class ShoppingService:
         request_data = datos
         mysql = appC
 
-        logging.error(request_data)
-
         try:
             idUs = request_data['idUsuario']
             fecha = datetime.today().strftime('%Y-%m-%d')
@@ -79,6 +77,9 @@ class ShoppingService:
             idDomicilio = request_data['idDomicilio']
             total = request_data['Monto']
 
+            if(str(ids)[-1] == ','):
+                ids = str(ids)[:-1]
+                
             if (any(chr.isdigit() for chr in nombre)):
                 content={'status':'No ingrese números en Nombre'}
                 return jsonify(content)
@@ -102,8 +103,6 @@ class ShoppingService:
     def update(self, datos, appC):
         request_data = datos
         mysql = appC
-
-        logging.error(request_data)
 
         try:
             numEstado = request_data['Estado']
@@ -147,8 +146,6 @@ class ShoppingService:
     def updateDed(self, datos, appC):
         request_data = datos
         mysql = appC
-
-        logging.error(request_data)
 
         try:
             dedicatoria = request_data['Dedicatoria']
