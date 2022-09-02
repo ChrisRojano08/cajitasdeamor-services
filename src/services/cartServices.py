@@ -142,3 +142,33 @@ class CartService:
                 }
 
             return jsonify(res)
+
+    def deleteAllById(self, datos, appC):
+        mysql = appC
+        request_data=datos
+        idUsuario = request_data['idUsuario']
+
+        try:
+
+            cur = cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            query = ("DELETE FROM carritocompras WHERE idUsuario=%s"%str(idUsuario))
+            cur.execute(query)
+            mysql.connection.commit()
+
+            res = {
+                    "status": 'Ok',
+                    "Mensaje": 'Se vacio el carrito con exito!',
+                }
+
+            cur.close()
+            return (res)
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
+
+            res = {
+                    "status": 'Error',
+                    "exception": ''+str(e),
+                }
+
+            return jsonify(res)
