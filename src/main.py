@@ -121,7 +121,7 @@ def cart_delete():
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
 @app.route('/cart/deleteAll', methods=['POST'])
-def cart_delete():
+def cart_deleteAll():
     datos = request.get_json()
     try:
         response = cartService.deleteAllById(appC=mysql, datos=datos)
