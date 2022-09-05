@@ -126,7 +126,7 @@ class UsersService:
             if (any(chr.isdigit() for chr in apellidos)):
                 content={'status':'No ingrese números en sus Apellidos'}
                 return jsonify(content)
-            if not(contrasenia.isupper() or contrasenia.islower()):
+            if contrasenia.isupper() or contrasenia.islower():
                 content={'status':'no letra'}
                 return jsonify(content)
             if not(any(chr.isdigit() for chr in contrasenia)):
@@ -173,6 +173,7 @@ class UsersService:
             nombre = request_data['Nombre']
             apellidos = request_data['Apellidos']
             correo = request_data['Correo']
+            contrasenia = request_data['Contrasenia']
             tipo = request_data['Tipo']
 
             if (any(chr.isdigit() for chr in nombre)):
@@ -182,15 +183,21 @@ class UsersService:
                 content={'status':'No ingrese números en sus Apellidos'}
                 return jsonify(content)
 
+            upHom = homeService.updateHome(appC=mysql, datos=request_data)
+
+            if upHom['status'] != 'Ok':
+                raise ConnectionError('Error al actualizar el domicilio')
+
             cur = mysql.connection.cursor()
-            query = "UPDATE usuarios SET Nombre=%s, Apellidos=%s, Correo=%s, Tipo=%s WHERE idUsuario=%s"
-            cur.execute(query, (nombre,apellidos,correo,tipo,idUsuario))
+            query = "UPDATE usuarios SET Nombre=%s, Apellidos=%s, Correo=%s, Contrasenia=%s, Tipo=%s, WHERE idUsuario=%s"
+            cur.execute(query, (nombre,apellidos,correo,contrasenia,tipo,idUsuario))
             mysql.connection.commit()
 
             res = [
                 {
                     "status": 'Ok',
-                    "Mensaje": 'Se actualizo el usuario '+nombre+' con exito!'
+                    "Mensaje": 'Se actualizo el usuario '+nombre+' con exito!',
+                    "Domicilio": str(upHom)
                 }
             ]
             cur.close()
