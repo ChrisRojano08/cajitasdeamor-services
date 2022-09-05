@@ -68,12 +68,7 @@ class CartService:
 
             cur.execute(queryCom, (idProducto, idUsuario))
             mysql.connection.commit()
-
-            logging.error('uwu')
-
             result = cur.fetchone()
-
-            logging.error('awa')
 
             if result is None:
                 Cantidad = int(request_data['Cantidad'])
@@ -88,7 +83,6 @@ class CartService:
                 cur.execute(query, (Cantidad, result['idCarrito']))
                 mysql.connection.commit()
             
-
             res = [
                 {
                     "status": 'Ok',
