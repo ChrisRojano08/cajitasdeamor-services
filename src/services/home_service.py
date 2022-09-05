@@ -8,20 +8,14 @@ class HomeService:
         request_data = datos
         id = request_data['idUsuario']
 
-        logging.error(id)
-
         try:
             cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             query = ("SELECT * FROM domicilio WHERE idUsuario='%s'"%str(id))
-
-            logging.error(query)
 
             cur.execute(query)
             mysql.connection.commit()
 
             result = cur.fetchall()
-
-            logging.error(result)
 
             if len(result) == 0:
                 content=[{'status':'Vacio'}]
@@ -39,8 +33,6 @@ class HomeService:
                     'Estado': r['Estado'],
                     'CodigoPostal': r['CodigoPostal']
                     }
-
-                logging.error(content)
 
                 domicilio.append(content)
                 content = {}
@@ -124,9 +116,6 @@ class HomeService:
             
 
             cur.close()
-
-            logging.exception('res')
-            logging.exception(res)
 
             return jsonify(res)
         except Exception as e:
