@@ -166,3 +166,36 @@ class CartService:
                 }
 
             return jsonify(res)
+
+    def updateCart(self, datos, appC):
+       
+        request_data = datos
+        mysql = appC
+
+        try:
+            idCarrito = request_data['idCarrito']
+            cantidad = request_data['cantidad']
+
+            cur = mysql.connection.cursor()
+            query = "UPDATE carritocompras SET cantidad=%s WHERE idCarrito=%s"
+            
+            cur.execute(query, (cantidad, idCarrito))
+            mysql.connection.commit()
+
+            res = {
+                    "status": 'Ok',
+                    "Mensaje": 'Se actualizo la cantidad con exito!',
+                }
+            
+
+            cur.close()
+
+            logging.exception('res')
+            logging.exception(res)
+
+            return jsonify(res)
+        except Exception as e:
+            logging.error('Error: ')
+            logging.error(e)
+            
+            return jsonify(status='Error', exception=''+str(e))

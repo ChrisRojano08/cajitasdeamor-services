@@ -130,6 +130,15 @@ def cart_deleteAll():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+@app.route('/cart/updateCart', methods=['POST'])
+def cart_updateCart():
+    datos = request.get_json()
+    try:
+        response = cartService.updateCart(appC=mysql, datos=datos)
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
 #Enpoint para usuarios
 @app.route('/users/findAll', methods=['POST'])
