@@ -1,6 +1,7 @@
 import logging
 from flask import jsonify
 from flask_mysqldb import MySQLdb
+import re
 
 class HomeService:
     def findByUserId(self, appC, datos):
@@ -59,11 +60,18 @@ class HomeService:
             idUsuario = request_data['idUsuario']
 
             if (any(chr.isdigit() for chr in municipio)):
-                content={'status':'No ingrese números en Municipio'}
+                content={'status':'No ingrese números en el minucipio'}
                 return jsonify(content)
+            if not re.match(r"^[A-Za-z ]+$", municipio):
+                content={'status':'No ingrese caracteres especiales en el minucipio'}
+                return jsonify(content)
+
             if (any(chr.isdigit() for chr in estado)):
-                content={'status':'No ingrese números en Estado'}
-                return jsonify(content)    
+                content={'status':'No ingrese números en el estado'}
+                return jsonify(content)
+            if not re.match(r"^[A-Za-z ]+$", estado):
+                content={'status':'No ingrese caracteres especiales en el estado'}
+                return jsonify(content)
 
             cur = mysql.connection.cursor()
             query = "INSERT INTO domicilio (Numero, Calle, Colonia, Municipio, Estado, CodigoPostal, idUsuario) VALUES (%s,%s,%s,%s,%s,%s,%s)"
