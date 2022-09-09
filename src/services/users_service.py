@@ -118,15 +118,19 @@ class UsersService:
             contrasenia = request_data['Contrasenia']
             tipo = 'usuario'
 
-            logging.error(request_data)
-
             if (any(chr.isdigit() for chr in nombre)):
-                content={'status':'No ingrese números en su Nombre'}
+                content={'status':'No ingrese números en su nombre'}
+                return jsonify(content)
+            if not(nombre.isalpha()):
+                content={'status':'No ingrese números o caracteres en su nombre'}
+                return jsonify(content)
+            if not(apellidos.isalpha()):
+                content={'status':'No ingrese números o caracteres en su apellidos'}
                 return jsonify(content)
             if (any(chr.isdigit() for chr in apellidos)):
-                content={'status':'No ingrese números en sus Apellidos'}
+                content={'status':'No ingrese números en sus apellidos'}
                 return jsonify(content)
-            if contrasenia.isupper() or contrasenia.islower():
+            if not(contrasenia.isupper()) and not(contrasenia.islower()):
                 content={'status':'no letra'}
                 return jsonify(content)
             if not(any(chr.isdigit() for chr in contrasenia)):
@@ -234,7 +238,7 @@ class UsersService:
             correo = request_data['Correo']
             contrasenia = request_data['Contrasenia']
 
-            if not(contrasenia.isupper() or contrasenia.islower()):
+            if not(contrasenia.isupper()) and not(contrasenia.islower()):
                 content={'status':'no letra'}
                 return jsonify(content)
             if not(any(chr.isdigit() for chr in contrasenia)):
