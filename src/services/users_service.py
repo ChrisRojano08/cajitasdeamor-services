@@ -2,6 +2,7 @@ import logging
 from flask import jsonify
 from flask_mysqldb import MySQLdb
 from requests import request
+import re
 
 from .home_service import HomeService
 homeService = HomeService()
@@ -121,16 +122,16 @@ class UsersService:
             if (any(chr.isdigit() for chr in nombre)):
                 content={'status':'No ingrese números en su nombre'}
                 return jsonify(content)
-            if not(nombre.isalpha()):
+            if not re.match(r"^[A-Za-z ]+$", nombre):
                 content={'status':'No ingrese números o caracteres en su nombre'}
                 return jsonify(content)
-            if not(apellidos.isalpha()):
+            if not re.match(r"^[A-Za-z ]+$", apellidos):
                 content={'status':'No ingrese números o caracteres en su apellidos'}
                 return jsonify(content)
             if (any(chr.isdigit() for chr in apellidos)):
                 content={'status':'No ingrese números en sus apellidos'}
                 return jsonify(content)
-            if not(contrasenia.isupper()) and not(contrasenia.islower()):
+            if ((contrasenia.isupper()) and not(contrasenia.islower())):
                 content={'status':'no letra'}
                 return jsonify(content)
             if not(any(chr.isdigit() for chr in contrasenia)):
@@ -180,10 +181,16 @@ class UsersService:
             tipo = request_data['Tipo']
 
             if (any(chr.isdigit() for chr in nombre)):
-                content={'status':'No ingrese números en su Nombre'}
+                content={'status':'No ingrese números en su nombre'}
+                return jsonify(content)
+            if not re.match(r"^[A-Za-z ]+$", nombre):
+                content={'status':'No ingrese números o caracteres en su nombre'}
+                return jsonify(content)
+            if not re.match(r"^[A-Za-z ]+$", apellidos):
+                content={'status':'No ingrese números o caracteres en su apellidos'}
                 return jsonify(content)
             if (any(chr.isdigit() for chr in apellidos)):
-                content={'status':'No ingrese números en sus Apellidos'}
+                content={'status':'No ingrese números en sus apellidos'}
                 return jsonify(content)
 
             cur = mysql.connection.cursor()
@@ -238,7 +245,7 @@ class UsersService:
             correo = request_data['Correo']
             contrasenia = request_data['Contrasenia']
 
-            if not(contrasenia.isupper()) and not(contrasenia.islower()):
+            if ((contrasenia.isupper()) and not(contrasenia.islower())):
                 content={'status':'no letra'}
                 return jsonify(content)
             if not(any(chr.isdigit() for chr in contrasenia)):
