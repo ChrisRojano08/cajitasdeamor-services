@@ -1,6 +1,7 @@
 import logging
 from flask import jsonify
 from flask_mysqldb import MySQLdb
+import re
 
 class PaymentService:
     def findById(self, id, appC):
@@ -47,6 +48,13 @@ class PaymentService:
             idUsuario = request_data['idUsuario']
             cvv = request_data['CVV']
             fechavencimiento = request_data['FechaVencimiento']
+
+            if (any(chr.isdigit() for chr in nombre)):
+                content={'status':'No ingrese números en su nombre'}
+                return jsonify(content)
+            if not re.match(r"^[A-Za-z ]+$", nombre):
+                content={'status':'No ingrese números o caracteres en su nombre'}
+                return jsonify(content)
 
             cur = mysql.connection.cursor()
             query = "INSERT INTO metodopago (Nombre, Banco, Cuenta, idUsuario, CVV, FechaVencimiento) VALUES (%s,%s,%s,%s,%s,%s)"
