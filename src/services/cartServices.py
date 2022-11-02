@@ -57,8 +57,6 @@ class CartService:
         request_data = datos
         mysql = appC
 
-        logging.error(request_data)
-
         try:
             idUsuario = request_data['idUsuario']
             idProducto = request_data['idProducto']
