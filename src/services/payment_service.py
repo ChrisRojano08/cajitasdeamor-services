@@ -93,7 +93,7 @@ class PaymentService:
 
             res = {
                     "status": 'Ok',
-                    "Mensaje": 'Se actualizo el domicilio '+str(idMetodoPago)+' con exito!',
+                    "Mensaje": 'Se actualizo el metodo de pago '+str(idMetodoPago)+' con exito!',
                 }
             
 

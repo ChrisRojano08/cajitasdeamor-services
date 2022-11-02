@@ -294,6 +294,17 @@ def home_insertHome():
         logging.exception(e)
         return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
 
+@app.route('/home/update', methods=['POST'])
+def home_updateHomes():
+    datos = request.get_json()
+    try:
+        response = home_service.updateHome(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
 @app.route('/home/findByUserId', methods=['POST'])
 def home_findByUserId():
     datos = request.get_json()
@@ -311,6 +322,17 @@ def pago_insertPago():
     datos = request.get_json()
     try:
         response = payment_service.insert(datos=datos, appC=mysql)
+
+        return response
+    except Exception as e:
+        logging.exception(e)
+        return jsonify(status='Error',  info='Algo salio mal', excepcion=''+str(e))
+
+@app.route('/payment/update', methods=['POST'])
+def pago_update():
+    datos = request.get_json()
+    try:
+        response = payment_service.update(datos=datos, appC=mysql)
 
         return response
     except Exception as e:
